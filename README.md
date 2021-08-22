@@ -305,7 +305,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
     }
     ```
 
-    The annotation `@AfterEach` signals that a method should be executed after each @Test method in the current class.
+    The annotation `@AfterEach` signals that a method should be executed after each `@Test` method in the current class.
 
 6. Package the project: `mvn clean package`. This will also run a test.
 
