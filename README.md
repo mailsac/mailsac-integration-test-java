@@ -208,7 +208,7 @@ Your environment is now appropriate for further development!
 
 ## Mailsac Java Integration Test
 
-This section describes how to use the Unirest library with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that the email is sent.
+This section describes how to use the Unirest library with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that the email was sent.
 
 ### What is Unirest? 
 
