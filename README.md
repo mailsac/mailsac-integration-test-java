@@ -104,7 +104,7 @@ Test run finished after 92 ms
 
 ### Testing Using Build Tools
 
-Testing from build automation tools is another option. In many ways, using build tools is the best option. For instance, it provides a standard directory layout that encourages better development practices. Maven also abstracts many underlying mechanisms allowing developers to run a single command for validating, compiling, testing, packaging, verifying, installing, and deploying. 
+Testing from build automation tools, like Maven, is another option. In many ways, using build tools is the best option. For instance, it provides a standard directory layout that encourages better development practices. Maven also abstracts many underlying mechanisms allowing developers to run a single command for validating, compiling, testing, packaging, verifying, installing, and deploying. 
 
 This section will describe how to set up Maven for building, managing, and testing a project.
 
@@ -134,11 +134,6 @@ This section will describe how to set up Maven for building, managing, and testi
         <artifactId>junit-jupiter-engine</artifactId>
         <version>5.7.2</version>
         <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.mashape.unirest</groupId>
-        <artifactId>unirest-java</artifactId>
-        <version>1.4.9</version>
       </dependency>
     </dependencies>
     <!-- ... -->
@@ -190,11 +185,11 @@ This section will describe how to set up Maven for building, managing, and testi
     }
     ```
 
-5. In the directory `mailsac-integration-test-java`, run this command which deletes the folder `target` \(if it does not already exist\) and packages the project into a new `target` folder:
+5. In the directory `mailsac-integration-test-java`, run this command which deletes the folder `target` \(if it does not already exist\) and packages the project into a new `target` folder. It also runs a test:
 
     `mvn clean package`.
 
-6. Do a quick test in the directory `mailsac-integration-test-java`: `mvn test`.
+6. You can do a quick test in the directory `mailsac-integration-test-java` again by running: `mvn test`.
 
     The output should appear somwhat like this:
 
@@ -214,7 +209,7 @@ Your environment is now appropriate for further development!
 
 ## Mailsac Java Integration Test
 
-This section describes how to use the Unirest library with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that an email is sent.
+This section describes how to use the Unirest library with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that the email is sent.
 
 ### What is Unirest? 
 
