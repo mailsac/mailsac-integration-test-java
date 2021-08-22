@@ -310,7 +310,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
     [INFO] -------------------------------------------------------
     [INFO]  T E S T S
     [INFO] -------------------------------------------------------
-    [INFO] Running com.mailsac.java.AppTest
+    [INFO] Running com.mailsac.api.AppTest
     [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.861 s - in com.mailsac.api.AppTest
     [INFO] 
     [INFO] Results:
