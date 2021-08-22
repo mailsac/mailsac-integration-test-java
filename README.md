@@ -104,7 +104,7 @@ Test run finished after 92 ms
 
 ### Testing Using Build Tools
 
-Testing from build automation tools, like Maven, is another option. In many ways, using build tools is the best option. For instance, it provides a standard directory layout that encourages better development practices. Maven also abstracts many underlying mechanisms allowing developers to run a single command for validating, compiling, testing, packaging, verifying, installing, and deploying. 
+Testing from build automation tools, like Maven, is another option. In many ways, using build tools is the best option. For instance, they provide a standard directory layout that encourages better development practices. Maven, for example, abstracts many underlying mechanisms allowing developers to run a single command for validating, compiling, testing, packaging, verifying, installing, and deploying. 
 
 This section will describe how to set up Maven for building, managing, and testing a project.
 
