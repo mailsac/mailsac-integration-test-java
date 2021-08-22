@@ -268,6 +268,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
     ```java
     public class AppTest {
         //...
+        @Test
         void sendMail() throws UnirestException {
             HttpResponse response = Unirest.post("https://mailsac.com/api/outgoing-messages")
             .header("content-type", "application/json")
