@@ -324,7 +324,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
 
 If you are having any difficulties, `git clone https://github.com/mailsac/mailsac-integration-test-java`. Make edits as necessary, and run `mvn package`.
 
-Alternatively, if your tests fail because of error codes when making requests to the Mailsac API, please refer to the [docs](https://mailsac.com/docs/api) for further reading.
+Alternatively, if your tests fail because of error codes when making requests to the Mailsac API, please refer to the [API](https://mailsac.com/docs/api) for further reading.
 
 ## Next Steps
 
