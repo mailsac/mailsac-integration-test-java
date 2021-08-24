@@ -310,7 +310,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
     }
     ```
 
-5. Add a `sendMail()` method which calls `purgeInbox()` in order to prepare room for new messages. Then it makes a POST request to `api/outgoing-messages` and checks whether or not a message was sent using `assertEquals`:
+5. Add a `sendMail()` method which makes a POST request to `api/outgoing-messages` and checks whether or not a message was sent using `assertEquals`:
 
     ```java
     public class AppTest {
