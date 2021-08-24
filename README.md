@@ -246,7 +246,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
     <!-- ... -->
     ```
 
-    Note: If you are not using Maven, include the JAR file in the classpath:
+    Note: If you are not using Maven, include the JAR files in the classpath:
 
     https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java/1.4.9
 
