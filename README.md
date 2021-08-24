@@ -338,7 +338,6 @@ Unirest is a HTTP client library available in multiple languages including Java,
         @Test
         @Order(2)
         void checkReceived() throws UnirestException, JSONException {
-
             HttpResponse<JsonNode> response = Unirest.get(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
             .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
             .asJson();
