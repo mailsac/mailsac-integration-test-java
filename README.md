@@ -246,7 +246,13 @@ Unirest is a HTTP client library available in multiple languages including Java,
     <!-- ... -->
     ```
 
-    Note: If you are not using Maven, include the JAR file in the classpath: https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java/1.4.9
+    Note: If you are not using Maven, include the JAR file in the classpath:
+
+    https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java/1.4.9
+
+    https://mvnrepository.com/artifact/org.awaitility/awaitility/4.1.0
+
+    https://mvnrepository.com/artifact/org.json/json/20210307
 
 2. Edit the `AppTest.java` file: `$EDITOR src/test/java/com/mailsac/api/AppTest.java`
 
