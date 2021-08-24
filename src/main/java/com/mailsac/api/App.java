@@ -1,4 +1,4 @@
-package com.mailsac.java;
+package com.mailsac.api;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;

@@ -252,7 +252,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
 
     Import the required modules:
     ```java
-    package com.mailsac.java;
+    package com.mailsac.api;
 
     import static org.junit.jupiter.api.Assertions.assertEquals;
     import static org.junit.jupiter.api.Assertions.assertTrue;

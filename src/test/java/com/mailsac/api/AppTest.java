@@ -1,4 +1,4 @@
-package com.mailsac.java;
+package com.mailsac.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
