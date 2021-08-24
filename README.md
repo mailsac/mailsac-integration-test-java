@@ -122,6 +122,12 @@ This section will describe how to set up Maven for building, managing, and testi
 
     ```xml
     <!-- ... -->
+    <properties>
+      <!-- ... -->
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    <!-- ... -->
     <dependencies>
       <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -312,7 +318,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
         @Test
         @Order(1)
         void sendMail() throws UnirestException {
-            purgeInbox()
+            purgeInbox();
 
             HttpResponse response = Unirest.post("https://mailsac.com/api/outgoing-messages")
             .header("content-type", "application/json")
