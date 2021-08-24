@@ -15,18 +15,17 @@ public class App {
     private static String mailsacHTML = "Check out <a href='https://example.com'>My website</a>";
 
     static void purgeInbox() throws UnirestException {
-        HttpResponse response = Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
+        Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
         .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
         .asString();
     }
 
     static void sendMail() throws UnirestException {
-        HttpResponse response = Unirest.post("https://mailsac.com/api/outgoing-messages")
+        Unirest.post("https://mailsac.com/api/outgoing-messages")
         .header("content-type", "application/json")
         .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
         .body(String.format("{\"to\":\"%s\",\"from\":\"%s\",\"subject\":\"%s\",\"text\":\"%s\",\"html\":\"%s\"}", mailsacToAddress, mailsacFromAddress, mailsacSubject, mailsacText, mailsacHTML))
         .asString();
-
     }
 
     public static void main(String[] args) throws UnirestException {

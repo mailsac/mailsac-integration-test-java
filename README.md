@@ -302,7 +302,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
     public class AppTest {
         //...
         void purgeInbox() throws UnirestException {
-            HttpResponse response = Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
+            Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
             .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
             .asString();
         }
@@ -318,8 +318,6 @@ Unirest is a HTTP client library available in multiple languages including Java,
         @Test
         @Order(1)
         void sendMail() throws UnirestException {
-            purgeInbox();
-
             HttpResponse response = Unirest.post("https://mailsac.com/api/outgoing-messages")
             .header("content-type", "application/json")
             .header("Mailsac-Key", String.format("%s", mailsacAPIKey))

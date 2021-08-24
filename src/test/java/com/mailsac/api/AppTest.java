@@ -39,7 +39,7 @@ public class AppTest {
      * This requires the inbox to be private, which is a paid feature of Mailsac.
      */
     static void purgeInbox() throws UnirestException {
-        HttpResponse response = Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
+        Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
         .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
         .asString();
     }
