@@ -301,7 +301,7 @@ Unirest is a HTTP client library available in multiple languages including Java,
     ```java
     public class AppTest {
         //...
-        void purgeInbox() throws UnirestException {
+        static void purgeInbox() throws UnirestException {
             Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
             .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
             .asString();
