@@ -2,7 +2,7 @@
 
 Mailsac uses the [REST API](https://docs.mailsac.com/en/latest/api_examples/getting_started/getting_started.html) to fetch, read, and send emails. The REST API also allows you to reserve a private email address that can forward messages to another email address, Slack, web sockets, etc.
 
-This article describes how to integrate Mailsac with Java and the unit testing framework: [JUnit](https://junit.org/junit5/).
+This article describes how to integrate Mailsac with Java and the unit testing framework: [JUnit](https://junit.org/junit5/). We will also use the [JavaMail API](https://javaee.github.io/javamail/) to send an email via an SMTP server.
 
 ## What is JUnit?
 
@@ -122,12 +122,6 @@ This section will describe how to set up Maven for building, managing, and testi
 
     ```xml
     <!-- ... -->
-    <properties>
-      <!-- ... -->
-      <maven.compiler.source>1.8</maven.compiler.source>
-      <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-    <!-- ... -->
     <dependencies>
       <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -212,11 +206,11 @@ This section will describe how to set up Maven for building, managing, and testi
 
 ## Mailsac Java Integration Test
 
-This section describes how to use the Unirest library with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that the email was sent. We will also use [Awaitility](https://github.com/awaitility/awaitility) to improve our testing and [JSON in Java](https://github.com/stleary/JSON-java) to parse JSON.
+This section describes how to use the JavaMail API with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that the email ewas sent. We will also use the Unirest library to send requests to the Mailsac API, and [Jackson](https://github.com/FasterXML/jackson) to parse JSON.
 
-### What is Unirest?
+### What is the JavaMail API?
 
-Unirest is a HTTP client library available in multiple languages including Java, Node.js, Python, etc. Unirest is used to make HTTP requests and has JSON support.
+The JavaMail API is used to build Java technology based email client applications through a platform independent and protocol independent framework.
 
 ### Integration Test Example
 
@@ -232,16 +226,15 @@ Unirest is a HTTP client library available in multiple languages including Java,
         <version>1.4.9</version>
       </dependency>
       <dependency>
-        <groupId>org.awaitility</groupId>
-        <artifactId>awaitility</artifactId>
-        <version>4.1.0</version>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>1.6.2</version>
       </dependency>
       <dependency>
-        <groupId>org.json</groupId>
-        <artifactId>json</artifactId>
-        <version>20210307</version>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.12.5</version>
       </dependency>
-      <!-- ... -->
     </dependencies>
     <!-- ... -->
     ```
@@ -250,9 +243,10 @@ Unirest is a HTTP client library available in multiple languages including Java,
 
     https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java/1.4.9
 
-    https://mvnrepository.com/artifact/org.awaitility/awaitility/4.1.0
+    https://mvnrepository.com/artifact/com.sun.mail/javax.mail/1.6.2
 
-    https://mvnrepository.com/artifact/org.json/json/20210307
+    https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind/2.12.5
+
 
 2. Edit the `AppTest.java` file: `$EDITOR src/test/java/com/mailsac/api/AppTest.java`
 
@@ -260,44 +254,50 @@ Unirest is a HTTP client library available in multiple languages including Java,
     ```java
     package com.mailsac.api;
 
-    import static org.junit.jupiter.api.Assertions.assertEquals;
     import static org.junit.jupiter.api.Assertions.assertTrue;
-    import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-    import org.junit.jupiter.api.TestMethodOrder;
+    import static org.junit.jupiter.api.Assertions.fail;
     import org.junit.jupiter.api.Test;
-    import org.junit.jupiter.api.Order;
+    import org.junit.jupiter.api.AfterAll;
 
-    import org.awaitility.Awaitility;
+    import java.util.Properties;
 
-    import java.util.concurrent.TimeUnit;
-
-    import org.json.JSONArray;
-    import org.json.JSONObject;
-    import org.json.JSONException;
+    import javax.mail.Session;
+    import javax.mail.internet.MimeMessage;
+    import javax.mail.Transport;
+    import javax.mail.Message;
+    import javax.mail.MessagingException;
+    import javax.mail.internet.MimeMessage;
+    import javax.mail.internet.InternetAddress;
 
     import com.mashape.unirest.http.HttpResponse;
     import com.mashape.unirest.http.Unirest;
-    import com.mashape.unirest.http.JsonNode;
     import com.mashape.unirest.http.exceptions.UnirestException;
+
+    import com.fasterxml.jackson.databind.ObjectMapper;
+    import com.fasterxml.jackson.databind.JsonNode;
+
+    import java.io.IOException;
+
     ```
 
 3. Configure Mailsac credentials and settings:
 
     ```java
     //...
-    @TestMethodOrder(OrderAnnotation.class)
     public class AppTest {
 
         // Generated by mailsac. See https://mailsac.com/api-keys
-        private static String mailsacAPIKey = "";
+        static String mailsacAPIKey = "";
         // Mailsac email address where the email will be sent
-        private static String mailsacToAddress = "";
-        // Mailsac email address sender
-        private static String mailsacFromAddress = "";
-
-        private static String mailsacSubject = "Hello!"; 
-        private static String mailsacText = "Check out https://example.com";
-        private static String mailsacHTML = "Check out <a href='https://example.com'>My website</a>";
+        static String mailsacToAddress = "";
+        // Username for smtp server authentication
+        static String smtpUser = "";
+        // Password for smtp server authentication
+        static String smtpPassword = "";
+        // Hostname of the smtp server
+        static String smtpHost = "";
+        // Port the smtp is listening on
+        static int smtpPort = 587;
 
     }
     ```
@@ -307,69 +307,89 @@ Unirest is a HTTP client library available in multiple languages including Java,
     ```java
     public class AppTest {
         //...
+        @AfterAll
         static void purgeInbox() throws UnirestException {
             Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
-            .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
-            .asString();
+                .header("Mailsac-Key", mailsacAPIKey)
+                .asString();
         }
 
     }
     ```
 
-5. Add a `sendMail()` method which makes a POST request to `api/outgoing-messages` and checks whether or not a message was sent using `assertEquals`:
+5. Add a `sendMail()` method which sends a message, checks if the message was received, and verifies message content:
 
     ```java
     public class AppTest {
         //...
         @Test
-        @Order(1)
-        void sendMail() throws UnirestException {
-            HttpResponse response = Unirest.post("https://mailsac.com/api/outgoing-messages")
-            .header("content-type", "application/json")
-            .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
-            .body(String.format("{\"to\":\"%s\",\"from\":\"%s\",\"subject\":\"%s\",\"text\":\"%s\",\"html\":\"%s\"}", mailsacToAddress, mailsacFromAddress, mailsacSubject, mailsacText, mailsacHTML))
-            .asString();
+        void sendMail() throws UnirestException, MessagingException, IOException, InterruptedException {
+            // Set system property for mail.mime.address.usecanonicalhostname to false because DNS lookup is expensive
+            Properties properties = new Properties();
+            properties.setProperty("mail.mime.address.usecanonicalhostname", "false");
 
-            Awaitility.await("Email failed to send").atMost(50, TimeUnit.SECONDS)
-            .untilAsserted(() -> assertEquals(200, response.getStatus()));
+            // Collect property which will prevent message.setFrom() from triggering a call to the local address (some network configurations causes the InetAddress.getCanonicalHostName to be slow)
+            Session session = Session.getInstance(properties);
+
+            // Construct message
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(smtpUser));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailsacToAddress));
+            message.setSubject("Hello!");
+            message.setText("Check out https://example.com");
+            message.setContent("Check out <a href='https://example.com'>My website</a>", "text/plain");
+
+            // Construct transport with proper authentication information then send message
+            Transport transport = session.getTransport("smtp");
+            transport.connect(smtpHost, smtpPort, smtpUser, smtpPassword);
+            message.saveChanges();
+            transport.sendMessage(message, message.getAllRecipients());
+
         }
 
     }
     ```
 
-    `Awaitility.await(String alias))` builds an await statement with an alias which acts similarly with `@DisplayName`. `atMost(long timeout, TimeUnit unit)` awaits at most `timeout` before throwing a timeout exception. `untilAsserted(ThrowingRunnable assertion)` awaits until a Runnable supplier execution passes (ends without throwing an exception).
-
-    `@Order(1)` ensures that `sendMail()` is tested first.
-
-6. Add a `checkReceived()` method which checks if the message was received by scanning the recipient inbox. If the recipient inbox is not empty, a message was found. It also checks for a link and then calls `purgeInbox()`.
+6. Add a for loop to check if the message was received by scanning the recipient inbox periodically. If the recipient inbox is not empty, a message was found and it verifies the message content:
 
     ```java
     public class AppTest {
         //...
-        @Test
-        @Order(2)
-        void checkReceived() throws UnirestException, JSONException {
-            HttpResponse<JsonNode> response = Unirest.get(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
-            .header("Mailsac-Key", String.format("%s", mailsacAPIKey))
-            .asJson();
+        void sendMail() throws UnirestException, MessagingException, IOException, InterruptedException {
+            //...
+            // Check inbox for the message 10x every 5 seconds then break out of the block if message is found
+            found: {
+                for (int i = 0; i < 10; i++) {
+                    // Send request to fetch a JSON array of email message objects from mailsac
+                    HttpResponse<String> response = Unirest.get(String.format("https://mailsac.com/api/addresses/%s/messages", mailsacToAddress))
+                        .header("Mailsac-Key", mailsacAPIKey)
+                        .asString();
 
-            Awaitility.await("Never received messages!").atMost(50, TimeUnit.SECONDS)
-            .untilAsserted(() -> assertTrue(!response.getBody().getArray().isEmpty()));
+                    // Parse JSON
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Object[] array = objectMapper.readValue(response.getBody(), Object[].class);
 
-            Awaitility.await("Missing / Incorrect link in email").atMost(50, TimeUnit.SECONDS)
-            .untilAsserted(() -> assertTrue(response.getBody().getArray().getJSONObject(0).get("links").toString().contains("https://example.com")));
+                    if (array.length > 0) {
+                        JsonNode jsonNode = objectMapper.convertValue(array[0], JsonNode.class);
 
-            purgeInbox();
+                        // After a message is retrieved from mailsac, the JSON object is checked to see if the link was parsed from the email and it is the correct link
+                        assertTrue(jsonNode.get("links").toString().contains("https://example.com"), "Missing / Incorrect link in email");
+                        break found;
+                    }
+                    
+                    Thread.sleep(5000);
+                }
+
+                fail("Never received messages!");
+            }
         }
         
     }
     ```
 
-    `HttpResponse<JsonNode>` changes `response` to type `JsonNode` which allows us to parse JSON with **JSON in Java**.
+    This test uses the [Mailsac API endpoint](https://mailsac.com/docs/api#tag/Email-Messages-API/paths/~1addresses~1{email}~1messages/get) `/api/addresses/{email}/messages` which lists all messages in an inbox.
 
-    `@Order(2)` ensures that `checkReceived()` is tested after `sendMail()`.
-
-6. Package the project: `mvn clean package`. This will also run a test.
+7. At this point, the code is complete. Package the project: `mvn clean package`. This will also run a test.
 
     The output should appear similar to this:
 
@@ -378,18 +398,18 @@ Unirest is a HTTP client library available in multiple languages including Java,
     [INFO]  T E S T S
     [INFO] -------------------------------------------------------
     [INFO] Running com.mailsac.api.AppTest
-    [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.861 s - in com.mailsac.api.AppTest
+    [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.148 s s - in com.mailsac.api.AppTest
     [INFO] 
     [INFO] Results:
     [INFO] 
-    [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+    [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
     ```
 
-    Subsequent changes to the source file do not require you to run `mvn clean package` again. Instead, just run `mvn test`.
+    Subsequent changes to the source file do not require you to run `mvn clean package` again. Instead, run `mvn test`.
 
 ## Github Repository
 
-If you are having any difficulties, `git clone https://github.com/mailsac/mailsac-integration-test-java`. Make edits as necessary, and run `mvn package`.
+If you encounter any difficulties, `git clone https://github.com/mailsac/mailsac-integration-test-java`. Make edits as necessary, and run `mvn package`.
 
 Alternatively, if your tests fail because of error codes when making requests to the Mailsac API, please refer to the [API Specification](https://mailsac.com/docs/api) for further reading.
 
