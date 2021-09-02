@@ -372,7 +372,7 @@ The JavaMail API is used to build Java technology based email client application
                     if (array.length > 0) {
                         JsonNode jsonNode = objectMapper.convertValue(array[0], JsonNode.class);
 
-                        // After a message is retrieved from mailsac, the JSON object is checked to see if the link was parsed from the email and it is the correct link
+                        // After a message is retrieved from mailsac, the JSON object is checked to see if the link was sent correctly
                         assertTrue(jsonNode.get("links").toString().contains("https://example.com"), "Missing / Incorrect link in email");
                         break found;
                     }
