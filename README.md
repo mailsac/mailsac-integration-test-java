@@ -316,7 +316,7 @@ The JavaMail API is used to build Java technology based email client application
     }
     ```
 
-5. Add a `sendMail()` method which sends a message, checks if the message was received, and verifies message content:
+5. Add a `sendMail()` method which sends a message, checks if the message was received, and verifies message the content:
 
     ```java
     public class AppTest {
