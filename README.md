@@ -206,7 +206,7 @@ This section will describe how to set up Maven for building, managing, and testi
 
 ## Mailsac Java Integration Test
 
-This section describes how to use the JavaMail API with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that the email ewas sent. We will also use the Unirest library to send requests to the Mailsac API, and [Jackson](https://github.com/FasterXML/jackson) to parse JSON.
+This section describes how to use the JavaMail API with Mailsac and JUnit. We will be sending an email to Mailsac and validating with JUnit to ensure that the email was sent. We will also use the Unirest library to send requests to the Mailsac API, and [Jackson](https://github.com/FasterXML/jackson) to parse JSON.
 
 ### What is the JavaMail API?
 
@@ -349,7 +349,7 @@ The JavaMail API is used to build Java technology based email client application
     }
     ```
 
-6. Add a for loop to check if the message was received by scanning the recipient inbox periodically. If the recipient inbox is not empty, a message was found and it verifies the message content:
+6. Add a for loop to check if the message was received by scanning the recipient inbox periodically. If the recipient inbox is not empty, a message was found and the message content is verified:
 
     ```java
     public class AppTest {
