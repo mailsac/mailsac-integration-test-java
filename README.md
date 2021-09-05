@@ -379,7 +379,7 @@ The JavaMail API is used to build Java technology based email client application
                     Thread.sleep(5000);
                 }
 
-                /// Fail the test if for loop does not break
+                // Fail the test if for loop does not break
                 fail("Never received messages!");
             }
         }
