@@ -117,7 +117,7 @@ public class AppTest {
         for (int i = 0; i < messagesArray.length; i++) {
             JsonNode m = objectMapper.convertValue(messagesArray[i], JsonNode.class);
             String id = m.get("_id").asText();
-            System.out.printf("Purging inbox message %s", id);
+            System.out.printf("Purging inbox message %s\n", id);
             Unirest.delete(String.format("https://mailsac.com/api/addresses/%s/messages/%s", mailsacToAddress, id))
                     .header("Mailsac-Key", mailsacAPIKey)
                     .asString();
@@ -140,7 +140,7 @@ public class AppTest {
                 ObjectMapper objectMapper = new ObjectMapper();
                 Object[] messagesArray = objectMapper.readValue(response.getBody(), Object[].class);
 
-                System.out.printf("Fetched %d messages from Mailsac for address %s", messagesArray.length,
+                System.out.printf("Fetched %d messages from Mailsac for address %s\n", messagesArray.length,
                         mailsacToAddress);
                 eachMessage: {
                     for (int m = 0; m < messagesArray.length; m++) {
@@ -151,6 +151,9 @@ public class AppTest {
                         // sent correctly
                         assertTrue(thisMessage.get("links").toString().contains("https://example.com"),
                                 "Missing / Incorrect link in email");
+
+                        System.out.printf("Message id %s contained the correct link\n",
+                                thisMessage.get("_id").asText());
 
                         return; // end the tests
                     }
