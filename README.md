@@ -20,7 +20,7 @@ unit is performing as intended.
 ## Setting Up the Environment
 
 Depending on the environment, there are multiple ways to run tests. Testing
-using the command and JUnit are included in this example.
+using the command line and JUnit are included in this example.
 
 ### Testing Using Command-Line
 
@@ -253,9 +253,9 @@ with JUnit.
 
 There are 3 additional libraries that will be used:
 
-- The [Unirest library](unirest) will to used to send REST requests to the Mailsac API
-- [Jackson](jackson) to parse JSON
-- [JavaMail API](javamail) to send email via SMTP
+- The [Unirest library](unirest) will send REST requests to the Mailsac API
+- [Jackson](jackson) will parse JSON responses from the Mailsac API
+- [JavaMail API](javamail) will send email via SMTP
 
 [unirest](http://kong.github.io/unirest-java/)
 [jackson](https://github.com/FasterXML/jackson)
@@ -328,14 +328,16 @@ There are 3 additional libraries that will be used:
     import static org.junit.jupiter.api.Assertions.fail;
     ```
 
-3. Acquire a [Mailsac API key](https://mailsac.com/docs/api), and decide what
-   to use as the FROM and TO addresses for your test. Export these parameters as
-   environment variables:
+3. Acquire a [Mailsac API key](https://mailsac.com/docs/api) and configure
+   SMTP sending. Export these parameters as environment variables:
 
     ```bash
     export MAILSAC_API_KEY=your_mailsac_key;
     export MAILSAC_TO_ADDRESS=your_address@mailsac.com
     export SMTP_FROM_ADDRESS=your_address@example.com
+    export SMTP_USERNAME=your_smtp_username
+    export SMTP_PASSWORD=your_smtp_password
+    export SMTP_HOST=smtp.example.com
     ```
 
    Configure use of the environment variables in your java code:
@@ -385,10 +387,7 @@ There are 3 additional libraries that will be used:
 
    ```
 
-4. Add a `purgeInbox()` method which makes a DELETE request to `api/addresses/{email}/messages`.
-   This requires the inbox to be private, which is a paid feature of Mailsac.
-   The advantage of using this feature is to ensure each run of the test is not
-   tainted by a previous test run.
+4. Add a `purgeInbox()` method which makes a DELETE request to `api/addresses/{email}/messages/{messageId>`.
 
    This section of code should be added to the existing `AppTest` class.
 
